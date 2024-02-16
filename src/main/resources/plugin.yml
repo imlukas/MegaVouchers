@@ -1,0 +1,4 @@
+name: MegaVouchers
+version: '${version}'
+main: dev.imlukas.megavouchers.MegaVouchersPlugin
+api-version: '1.20'
