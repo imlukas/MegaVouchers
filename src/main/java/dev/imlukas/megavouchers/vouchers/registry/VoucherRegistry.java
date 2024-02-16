@@ -13,8 +13,8 @@ public class VoucherRegistry {
         vouchers.put(voucher.getIdentifier(), voucher);
     }
 
-    public Voucher getVoucher(String id) {
-        return vouchers.get(id);
+    public Optional<Voucher> getVoucher(String id) {
+        return Optional.ofNullable(vouchers.get(id));
     }
 
     public void unregisterVoucher(String id) {

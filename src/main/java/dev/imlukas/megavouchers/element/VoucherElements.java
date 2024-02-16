@@ -19,21 +19,36 @@ public class VoucherElements {
         elements.forEach(this::addElement);
     }
 
+    /**
+     * Returns all elements present in this voucher
+     * @return all elements
+     */
+    public List<VoucherElement> getAllElements() {
+        List<VoucherElement> elements = getElements();
+        elements.addAll(getConditionals());
+        return elements;
+    }
+
+    /**
+     * Returns all conditionals present in this voucher
+     * @return all conditionals
+     */
     public List<ConditionalVoucherElement> getConditionals() {
         return List.copyOf(conditionals);
     }
 
+    /**
+     * Returns all elements present in this voucher with the given priority, excludes conditionals
+     * @param priority the priority to get the elements for
+     */
     public List<VoucherElement> getElements(VoucherElementPriority priority) {
-        List<VoucherElement> elements = new ArrayList<>(this.elements.get(priority));
-
-        conditionals.forEach(conditional -> {
-            if (conditional.getPriority() == priority) {
-                elements.add(conditional);
-            }
-        });
-        return elements;
+        return List.copyOf(elements.getOrDefault(priority, new ArrayList<>()));
     }
 
+    /**
+     * Returns all elements present in this voucher, excludes conditionals
+     * @return all elements
+     */
     public List<VoucherElement> getElements() {
         List<VoucherElement> elements = new ArrayList<>();
 
@@ -41,7 +56,6 @@ public class VoucherElements {
             elements.addAll(List.copyOf(elementList));
         }
 
-        elements.addAll(conditionals);
         return elements;
     }
 

@@ -75,7 +75,7 @@ public class VoucherParser {
         }
 
         VoucherElements elements = parseElements(elementsSection);
-        getLog().info("Parsed " + elements.getElements().size() + " elements for voucher: " + identifier);
+        getLog().info("Parsed " + elements.getAllElements().size() + " elements for voucher: " + identifier);
 
         VoucherData data = new VoucherData(identifier, displayItem, elements);
         return new PlayerVoucher(plugin, data);

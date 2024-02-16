@@ -28,6 +28,10 @@ public class Messages extends YMLBase {
         super(plugin, "messages.yml");
     }
 
+    public final void send(Audience sender, String path) {
+        send(sender, path, new ComponentPlaceholder[0]);
+    }
+
     @SafeVarargs
     public final void send(Audience sender, String path, Placeholder<Audience>... placeholders) {
         ComponentPlaceholder<Audience>[] componentPlaceholders = new ComponentPlaceholder[placeholders.length];

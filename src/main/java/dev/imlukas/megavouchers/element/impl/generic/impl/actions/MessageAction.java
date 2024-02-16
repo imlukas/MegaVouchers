@@ -17,8 +17,12 @@ public class MessageAction extends VoucherElement {
         super(plugin, section);
 
         if (!section.isList("messages")) {
-            messages.add(section.getString("messages"));
-            return;
+            String message = section.getString("messages", section.getString("message"));
+
+            if (message != null) {
+                messages.add(message);
+                return;
+            }
         }
 
         messages.addAll(section.getStringList("messages"));
