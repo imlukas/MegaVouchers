@@ -8,7 +8,6 @@ import org.bukkit.inventory.ItemStack;
 public class VoucherData {
 
     private final String identifier;
-    private final String displayName;
-    private final VoucherElements elements;
     private final ItemStack displayItem;
+    private final VoucherElements elements;
 }

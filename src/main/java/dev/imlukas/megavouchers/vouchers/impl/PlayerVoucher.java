@@ -10,7 +10,5 @@ public class PlayerVoucher extends AbstractVoucher {
 
     public PlayerVoucher(MegaVouchersPlugin plugin, VoucherData data) {
         super(plugin, data);
-
-
     }
 }

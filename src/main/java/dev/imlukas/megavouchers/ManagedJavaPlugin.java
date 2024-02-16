@@ -1,8 +1,6 @@
 package dev.imlukas.megavouchers;
 
 import dev.imlukas.megavouchers.util.io.FileUtils;
-import dev.imlukas.megavouchers.element.generic.registry.GenericElementRegistry;
-import dev.imlukas.megavouchers.element.generic.registry.VoucherElementRegistry;
 import lombok.Getter;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;

@@ -45,7 +45,11 @@ public class Messages extends YMLBase {
         Message message = getMessage(path);
 
         if (message == null) {
-            return;
+            message = getRawMessage(path, placeholders);
+
+            if (message == null) {
+                return;
+            }
         }
 
         message.send(sender);
@@ -64,12 +68,7 @@ public class Messages extends YMLBase {
     }
 
     @SafeVarargs
-    public final Message getMessage(String path, ComponentPlaceholder<Audience>... placeholders) {
-        ConfigurationSection section = getConfiguration().getConfigurationSection("messages." + path);
-        if (section == null) {
-            return getRawMessage(path, placeholders);
-        }
-
+    public final Message getMessage(ConfigurationSection section, ComponentPlaceholder<Audience>... placeholders) {
         if (!section.contains("type")) {
             return new ChatMessage(section, placeholders);
         }
@@ -82,5 +81,11 @@ public class Messages extends YMLBase {
 
         String type = section.getString("type");
         return registry.get(type, section, placeholders);
+    }
+
+    @SafeVarargs
+    public final Message getMessage(String path, ComponentPlaceholder<Audience>... placeholders) {
+        ConfigurationSection section = getConfiguration().getConfigurationSection("messages." + path);
+        return getMessage(section, placeholders);
     }
 }

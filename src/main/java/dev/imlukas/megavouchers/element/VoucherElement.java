@@ -10,11 +10,22 @@ import org.bukkit.entity.Player;
  */
 public abstract class VoucherElement {
 
-    protected VoucherElement(MegaVouchersPlugin plugin, ConfigurationSection section) {}
+    protected VoucherElementPriority priority = VoucherElementPriority.NORMAL;
 
-    public VoucherElementPriority getPriority() {
-        return VoucherElementPriority.NORMAL;
+    protected VoucherElement(MegaVouchersPlugin plugin, ConfigurationSection section) {
+        if (section.contains("priority")) {
+            this.priority = VoucherElementPriority.valueOf(section.getString("priority"));
+        }
     }
 
+    public VoucherElementPriority getPriority() {
+        return priority;
+    }
+
+    /**
+     * Executes the action
+     * @param player the player to execute the action on
+     * @return true if the action was successful, false otherwise
+     */
     protected abstract void execute(Player player);
 }

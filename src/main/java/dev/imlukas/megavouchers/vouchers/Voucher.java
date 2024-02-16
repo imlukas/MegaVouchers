@@ -9,8 +9,6 @@ public interface Voucher {
 
     String getIdentifier();
 
-    String getDisplayName();
-
     VoucherElements getElements();
 
     void give(Player player);

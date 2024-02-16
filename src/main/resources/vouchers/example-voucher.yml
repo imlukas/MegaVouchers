@@ -41,3 +41,31 @@ voucher:
       commands: # The commands to be executed, they will all be executed in the order they are listed
         - "give %player% diamond 1"
         - "give %player% emerald 1"
+    item:
+      chance: 80 # The chance of the item being given to the player, in this case 80%
+      drop: false # Whether the item should be dropped or not, even if the player's inventory is not full
+      type: item
+      item: # The item to be given to the player
+        type: DIAMOND
+        amount: 1
+        name: "Example Item"
+        lore:
+          - "This is an example item."
+        glow: true
+        unbreakable: true
+        model-data: 1
+        enchants:
+          unbreaking: 1
+      item2:
+        drop: true
+        chance: 10 # The chance of the item being given to the player, in this case 10%
+        type: EMERALD
+        amount: 1
+        name: "Example Item 2"
+        lore:
+          - "This is an example item."
+        glow: true
+        unbreakable: true
+        model-data: 1
+        enchants:
+          unbreaking: 1
