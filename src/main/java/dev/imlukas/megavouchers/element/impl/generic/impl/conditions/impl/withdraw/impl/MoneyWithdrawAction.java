@@ -16,7 +16,7 @@ public class MoneyWithdrawAction extends WithdrawableConditionalVoucherElement {
     }
 
     @Override
-    protected void execute(Player player) {
+    public void execute(Player player) {
 
     }
 }

@@ -1,30 +1,30 @@
 package dev.imlukas.megavouchers.util.file.messages.impl;
 
 import dev.imlukas.megavouchers.util.file.messages.Message;
-import dev.imlukas.megavouchers.util.text.ComponentPlaceholder;
+import dev.imlukas.megavouchers.util.text.TextUtils;
+import dev.imlukas.megavouchers.util.text.placeholder.Placeholder;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 
 public class RawMessage implements Message {
 
     private final Component message;
-    private final ComponentPlaceholder<Audience>[] placeholders;
+    private final Placeholder<Audience>[] placeholders;
 
     @SafeVarargs
-    public RawMessage(String message, ComponentPlaceholder<Audience>... placeholders) {
-        this(MiniMessage.miniMessage().deserialize(message), placeholders);
+    public RawMessage(String message, Placeholder<Audience>... placeholders) {
+        this(TextUtils.color(message), placeholders);
     }
 
     @SafeVarargs
-    public RawMessage(Component message, ComponentPlaceholder<Audience>... placeholders) {
+    public RawMessage(Component message, Placeholder<Audience>... placeholders) {
         this.placeholders = placeholders;
         this.message = message;
     }
 
     @Override
     public Component replacePlaceholders(Component message, Audience audience) {
-        for (ComponentPlaceholder<Audience> placeholder : placeholders) {
+        for (Placeholder<Audience> placeholder : placeholders) {
             message = placeholder.replace(message, audience);
         }
 

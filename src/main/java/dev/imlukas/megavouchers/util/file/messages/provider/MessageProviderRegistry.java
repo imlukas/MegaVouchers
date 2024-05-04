@@ -4,7 +4,7 @@ import dev.imlukas.megavouchers.util.file.messages.Message;
 import dev.imlukas.megavouchers.util.file.messages.impl.ActionbarMessage;
 import dev.imlukas.megavouchers.util.file.messages.impl.ChatMessage;
 import dev.imlukas.megavouchers.util.file.messages.impl.TitleMessage;
-import dev.imlukas.megavouchers.util.text.ComponentPlaceholder;
+import dev.imlukas.megavouchers.util.text.placeholder.Placeholder;
 import net.kyori.adventure.audience.Audience;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -30,7 +30,7 @@ public class MessageProviderRegistry {
     }
 
     @SafeVarargs
-    public final Message get(String name, ConfigurationSection section, ComponentPlaceholder<Audience>... placeholders) {
+    public final Message get(String name, ConfigurationSection section, Placeholder<Audience>... placeholders) {
         return providers.get(name).provide(section, placeholders);
     }
 }

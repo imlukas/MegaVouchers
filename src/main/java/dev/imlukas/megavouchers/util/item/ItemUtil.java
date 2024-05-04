@@ -1,88 +1,54 @@
 package dev.imlukas.megavouchers.util.item;
 
-import dev.imlukas.megavouchers.util.text.ComponentPlaceholder;
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
+import com.mojang.authlib.properties.PropertyMap;
 import dev.imlukas.megavouchers.util.text.TextUtils;
+import dev.imlukas.megavouchers.util.text.placeholder.Placeholder;
 import net.kyori.adventure.text.Component;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 
+import java.lang.reflect.Field;
 import java.util.*;
 
 public final class ItemUtil {
-    private static final List<String> FORGE_COMPATIBLE = List.of("pickaxe", "axe", "shovel", "hoe", "sword", "bow", "helmet", "chestplate", "leggings", "boots");
 
-    public static boolean isForgeCompatible(ItemStack item) {
-        for (String tool : FORGE_COMPATIBLE) {
-            if (!item.getType().name().contains(tool.toUpperCase(Locale.ROOT))) {
-                return true;
-            }
-        }
-        return false;
+    private ItemUtil() {
     }
 
-    public static void setItemName(ItemStack itemStack, String name) {
-        ItemMeta meta = itemStack.getItemMeta();
-        meta.displayName(TextUtils.color(name));
-        itemStack.setItemMeta(meta);
+    public static void addLore(ItemStack item, List<String> toAdd) {
+        addLore(item, toAdd.toArray(new String[0]));
     }
 
-    public static void clearLore(ItemStack itemStack) {
-        ItemMeta meta = itemStack.getItemMeta();
-        meta.lore(null);
-        itemStack.setItemMeta(meta);
-    }
-
-    public static void setLore(ItemStack itemStack, List<String> lore) {
-        ItemMeta meta = itemStack.getItemMeta();
-
-        meta.lore(TextUtils.color(lore));
-        itemStack.setItemMeta(meta);
-    }
-
-
-    public static void addLore(ItemStack itemStack, List<String> lore) {
-        addLore(itemStack, lore.toArray(new String[0]));
-    }
-
-    public static void addLore(ItemStack itemStack, String... toAdd) {
-        ItemMeta meta = itemStack.getItemMeta();
-
+    public static void addLore(ItemStack item, String... toAdd) {
+        ItemMeta meta = item.getItemMeta();
         List<Component> lore = meta.lore();
-        List<Component> toAddComponent = TextUtils.color(Arrays.asList(toAdd));
+
+        Component[] toAddComponents = new Component[toAdd.length];
+
+        for (int i = 0; i < toAdd.length; i++) {
+            toAddComponents[i] = TextUtils.color(toAdd[i]);
+        }
 
         if (lore == null) {
             lore = new ArrayList<>();
         }
 
-        lore.addAll(toAddComponent);
+        Collections.addAll(lore, toAddComponents);
         meta.lore(lore);
-        itemStack.setItemMeta(meta);
-    }
-
-
-    public static void give(Player player, ItemStack item) {
-        PlayerInventory inv = player.getInventory();
-
-        for (Map.Entry<Integer, ItemStack> entry : inv.addItem(item).entrySet()) {
-            ItemStack copy = entry.getValue().clone();
-            item.setAmount(entry.getKey());
-            player.getWorld().dropItemNaturally(player.getLocation(), copy);
-        }
+        item.setItemMeta(meta);
     }
 
     public static void setModelData(ItemStack item, int modelData) {
         ItemMeta meta = item.getItemMeta();
-
         meta.setCustomModelData(modelData);
         item.setItemMeta(meta);
     }
 
     public static <T> void replacePlaceholder(ItemStack item, T replacementObject,
-                                              Collection<ComponentPlaceholder<T>> placeholderCollection) {
+                                              Collection<Placeholder<T>> placeholderCollection) {
         if (item == null || item.getItemMeta() == null) {
             return;
         }
@@ -91,10 +57,10 @@ public final class ItemUtil {
             return;
         }
 
-        ComponentPlaceholder<T>[] placeholders = new ComponentPlaceholder[placeholderCollection.size()];
+        Placeholder<T>[] placeholders = new Placeholder[placeholderCollection.size()];
 
         int index = 0;
-        for (ComponentPlaceholder<T> placeholder : placeholderCollection) {
+        for (Placeholder<T> placeholder : placeholderCollection) {
             if (placeholder == null) {
                 continue;
             }
@@ -104,7 +70,7 @@ public final class ItemUtil {
 
         // shrink array to fit
         if (index != placeholders.length) {
-            ComponentPlaceholder<T>[] newPlaceholders = new ComponentPlaceholder[index];
+            Placeholder<T>[] newPlaceholders = new Placeholder[index];
             System.arraycopy(placeholders, 0, newPlaceholders, 0, index);
             placeholders = newPlaceholders;
         }
@@ -113,7 +79,8 @@ public final class ItemUtil {
     }
 
     @SafeVarargs
-    public static synchronized <T> void replacePlaceholder(ItemStack item, T replacementObject, ComponentPlaceholder<T>... placeholder) {
+    public static synchronized <T> void replacePlaceholder(ItemStack item, T replacementObject,
+                                                           Placeholder<T>... placeholder) {
         if (item == null) {
             return;
         }
@@ -124,43 +91,88 @@ public final class ItemUtil {
             return;
         }
 
-        if (meta.hasDisplayName()) {
-            Component displayName = meta.displayName();
+        Component displayName = meta.displayName();
 
-            for (ComponentPlaceholder<T> placeholder1 : placeholder) {
-                displayName = placeholder1.replace(displayName, replacementObject);
+        if (displayName != null) {
+            for (Placeholder<T> componentPlaceholder : placeholder) {
+                displayName = componentPlaceholder.replace(displayName, replacementObject);
             }
 
             meta.displayName(displayName);
         }
 
-        if (meta.hasLore()) {
-            List<Component> lore = meta.lore();
+        List<Component> lore = meta.lore();
 
-            for (int index = 0; index < lore.size(); index++) {
-                Component line = lore.get(index);
+        if (lore != null) {
+            for (int i = 0; i < lore.size(); i++) {
+                Component line = lore.get(i);
 
-                for (ComponentPlaceholder<T> placeholder1 : placeholder) {
-                    line = placeholder1.replace(line, replacementObject);
+                for (Placeholder<T> componentPlaceholder : placeholder) {
+                    line = componentPlaceholder.replace(line, replacementObject);
                 }
 
-                lore.set(index, line);
+                lore.set(i, line);
             }
 
             meta.lore(lore);
         }
+
+        if (meta instanceof SkullMeta skullMeta) {
+
+            boolean replaceProfile = true;
+            if (skullMeta.hasOwner()) {
+                String owner = skullMeta.getOwner();
+
+                for (Placeholder<T> componentPlaceholder : placeholder) {
+                    String oldOwner = owner;
+                    owner = componentPlaceholder.replace(owner, replacementObject);
+
+                    if (owner != null && !owner.equals(oldOwner)) {
+                        skullMeta.setOwner(owner);
+                        replaceProfile = false;
+                    }
+                }
+
+            }
+
+            if (replaceProfile) {
+                try {
+
+                    Field profileField = skullMeta.getClass().getDeclaredField("profile");
+                    profileField.setAccessible(true);
+                    GameProfile profile = (GameProfile) profileField.get(skullMeta);
+                    profileField.setAccessible(false);
+
+                    if (profile != null) {
+                        PropertyMap propertyMap = profile.getProperties();
+                        Collection<Property> properties = new HashSet<>(
+                                propertyMap.get("textures")
+                        );
+
+                        propertyMap.removeAll("properties");
+
+                        for (Property property : properties) {
+                            String value = property.getName();
+                            String signature = property.getSignature();
+
+                            for (Placeholder<T> componentPlaceholder : placeholder) {
+                                value = componentPlaceholder.replace(value, replacementObject);
+                                signature = componentPlaceholder.replace(signature, replacementObject);
+                            }
+
+                            propertyMap.put("textures", new Property("textures", value, null));
+                            break;
+                        }
+
+                    }
+                } catch (NoSuchFieldException | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+        }
         item.setItemMeta(meta);
     }
 
-    public static ItemStack setGlowing(ItemStack displayItem, boolean glowing) {
-        if (!glowing) {
-            displayItem.removeEnchantment(Enchantment.LOYALTY);
-            return displayItem;
-        }
-        ItemMeta meta = displayItem.getItemMeta();
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        meta.addEnchant(Enchantment.LOYALTY, 123, true);
-        displayItem.setItemMeta(meta);
-        return displayItem;
-    }
 }

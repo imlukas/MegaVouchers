@@ -2,14 +2,14 @@ package dev.imlukas.megavouchers.vouchers.parser;
 
 import dev.imlukas.megavouchers.MegaVouchersPlugin;
 import dev.imlukas.megavouchers.element.VoucherElement;
-import dev.imlukas.megavouchers.element.VoucherElements;
-import dev.imlukas.megavouchers.element.registry.VoucherElementRegistry;
+import dev.imlukas.megavouchers.element.container.VoucherElementContainer;
+import dev.imlukas.megavouchers.element.impl.generic.registry.ElementProviderRegistry;
 import dev.imlukas.megavouchers.util.file.YMLBase;
 import dev.imlukas.megavouchers.util.io.IOUtils;
 import dev.imlukas.megavouchers.util.item.parser.ItemParser;
+import dev.imlukas.megavouchers.vouchers.ConfigurableVoucher;
 import dev.imlukas.megavouchers.vouchers.Voucher;
 import dev.imlukas.megavouchers.vouchers.data.VoucherData;
-import dev.imlukas.megavouchers.vouchers.impl.PlayerVoucher;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -18,14 +18,13 @@ import org.bukkit.inventory.ItemStack;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 import static dev.imlukas.megavouchers.ManagedJavaPlugin.getLog;
 
 public class VoucherParser {
 
     private final MegaVouchersPlugin plugin;
-    private final VoucherElementRegistry elementRegistry;
+    private final ElementProviderRegistry elementRegistry;
 
     public VoucherParser(MegaVouchersPlugin plugin) {
         this.plugin = plugin;
@@ -51,7 +50,7 @@ public class VoucherParser {
         return vouchers;
     }
 
-    public Voucher parse(File voucherFile) {
+    private Voucher parse(File voucherFile) {
         YMLBase ymlBase = new YMLBase(plugin, voucherFile, true);
         FileConfiguration config = ymlBase.getConfiguration();
         ConfigurationSection section = config.getConfigurationSection("voucher");
@@ -74,15 +73,15 @@ public class VoucherParser {
             return null;
         }
 
-        VoucherElements elements = parseElements(elementsSection);
+        VoucherElementContainer elements = parseElements(elementsSection);
         getLog().info("Parsed " + elements.getAllElements().size() + " elements for voucher: " + identifier);
 
         VoucherData data = new VoucherData(identifier, displayItem, elements);
-        return new PlayerVoucher(plugin, data);
+        return new ConfigurableVoucher(plugin, data);
     }
 
 
-    public VoucherElements parseElements(ConfigurationSection elementsSection) {
+    private VoucherElementContainer parseElements(ConfigurationSection elementsSection) {
         List<VoucherElement> elements = new ArrayList<>();
 
         for (String elementId : elementsSection.getKeys(false)) {
@@ -102,6 +101,6 @@ public class VoucherParser {
             elements.add(element);
         }
 
-        return new VoucherElements(elements);
+        return new VoucherElementContainer(elements);
     }
 }

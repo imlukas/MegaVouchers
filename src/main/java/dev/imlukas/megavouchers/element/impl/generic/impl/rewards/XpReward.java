@@ -12,11 +12,11 @@ public class XpReward extends VoucherElement {
     protected XpReward(MegaVouchersPlugin plugin, ConfigurationSection section) {
         super(plugin, section);
 
-        this.amount = section.getInt("value");
+        this.amount = section.getInt("value", 0);
     }
 
     @Override
-    protected void execute(Player player) {
+    public void execute(Player player) {
         player.giveExp(amount);
     }
 }

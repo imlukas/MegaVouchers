@@ -4,7 +4,6 @@ import dev.imlukas.megavouchers.MegaVouchersPlugin;
 import dev.imlukas.megavouchers.element.impl.generic.impl.conditions.ConditionalVoucherElement;
 import dev.imlukas.megavouchers.util.file.messages.Message;
 import dev.imlukas.megavouchers.util.file.messages.impl.RawMessage;
-import dev.imlukas.megavouchers.element.priority.VoucherElementPriority;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 

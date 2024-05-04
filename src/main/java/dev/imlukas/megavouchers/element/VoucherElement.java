@@ -24,8 +24,9 @@ public abstract class VoucherElement {
 
     /**
      * Executes the action
+     *
      * @param player the player to execute the action on
      * @return true if the action was successful, false otherwise
      */
-    protected abstract void execute(Player player);
+    public abstract void execute(Player player);
 }

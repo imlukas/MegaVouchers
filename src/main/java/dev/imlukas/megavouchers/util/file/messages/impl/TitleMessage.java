@@ -1,11 +1,11 @@
 package dev.imlukas.megavouchers.util.file.messages.impl;
 
 import dev.imlukas.megavouchers.util.file.messages.AbstractMessage;
-import dev.imlukas.megavouchers.util.text.ComponentPlaceholder;
+import dev.imlukas.megavouchers.util.text.TextUtils;
 import dev.imlukas.megavouchers.util.text.TitleBuilder;
+import dev.imlukas.megavouchers.util.text.placeholder.Placeholder;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class TitleMessage extends AbstractMessage {
@@ -17,10 +17,10 @@ public class TitleMessage extends AbstractMessage {
     private final int fadeOut;
 
     @SafeVarargs
-    public TitleMessage(ConfigurationSection section, ComponentPlaceholder<Audience>... placeholders) {
+    public TitleMessage(ConfigurationSection section, Placeholder<Audience>... placeholders) {
         super(section, placeholders);
-        title = MiniMessage.miniMessage().deserialize(section.getString("title", ""));
-        subtitle = MiniMessage.miniMessage().deserialize(section.getString("subtitle", ""));
+        title = TextUtils.color(section.getString("title", ""));
+        subtitle = TextUtils.color(section.getString("subtitle", ""));
         fadeIn = section.getInt("fadeIn", 60);
         stay = section.getInt("stay", 20);
         fadeOut = section.getInt("fadeOut", 60);

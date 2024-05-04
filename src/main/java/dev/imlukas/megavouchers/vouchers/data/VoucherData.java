@@ -1,6 +1,6 @@
 package dev.imlukas.megavouchers.vouchers.data;
 
-import dev.imlukas.megavouchers.element.VoucherElements;
+import dev.imlukas.megavouchers.element.container.VoucherElementContainer;
 import lombok.Data;
 import org.bukkit.inventory.ItemStack;
 
@@ -9,5 +9,5 @@ public class VoucherData {
 
     private final String identifier;
     private final ItemStack displayItem;
-    private final VoucherElements elements;
+    private final VoucherElementContainer elements;
 }

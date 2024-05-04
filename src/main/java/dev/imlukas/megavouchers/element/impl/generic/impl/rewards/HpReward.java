@@ -7,16 +7,16 @@ import org.bukkit.entity.Player;
 
 public class HpReward extends VoucherElement {
 
-    private int hp;
+    private final int hp;
 
     protected HpReward(MegaVouchersPlugin plugin, ConfigurationSection section) {
         super(plugin, section);
 
-        this.hp = section.getInt("value");
+        this.hp = section.getInt("value", 0);
     }
 
     @Override
-    protected void execute(Player player) {
-        //
+    public void execute(Player player) {
+        player.setHealth(player.getHealth() + hp);
     }
 }

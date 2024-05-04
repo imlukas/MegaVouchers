@@ -1,10 +1,10 @@
 package dev.imlukas.megavouchers.util.file.messages.impl;
 
 import dev.imlukas.megavouchers.util.file.messages.AbstractMessage;
-import dev.imlukas.megavouchers.util.text.ComponentPlaceholder;
+import dev.imlukas.megavouchers.util.text.TextUtils;
+import dev.imlukas.megavouchers.util.text.placeholder.Placeholder;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.configuration.ConfigurationSection;
 
 
@@ -13,9 +13,9 @@ public class ActionbarMessage extends AbstractMessage {
     private final Component message;
 
     @SafeVarargs
-    public ActionbarMessage(ConfigurationSection section, ComponentPlaceholder<Audience>... placeholders) {
+    public ActionbarMessage(ConfigurationSection section, Placeholder<Audience>... placeholders) {
         super(section, placeholders);
-        message = MiniMessage.miniMessage().deserialize(section.getString("message"));
+        message = TextUtils.color(section.getString("message"));
     }
 
     @Override

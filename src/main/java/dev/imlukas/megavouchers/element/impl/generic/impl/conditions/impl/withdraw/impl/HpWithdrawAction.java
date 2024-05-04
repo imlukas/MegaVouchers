@@ -11,6 +11,7 @@ public class HpWithdrawAction extends WithdrawableConditionalVoucherElement {
 
     public HpWithdrawAction(MegaVouchersPlugin plugin, ConfigurationSection section) {
         super(plugin, section);
+        // TODO: Implement these
         this.amount = section.getDouble("value");
     }
 
@@ -20,7 +21,7 @@ public class HpWithdrawAction extends WithdrawableConditionalVoucherElement {
     }
 
     @Override
-    protected void execute(Player player) {
+    public void execute(Player player) {
         //
     }
 }

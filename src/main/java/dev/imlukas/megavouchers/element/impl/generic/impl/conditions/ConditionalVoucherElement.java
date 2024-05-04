@@ -3,7 +3,6 @@ package dev.imlukas.megavouchers.element.impl.generic.impl.conditions;
 import dev.imlukas.megavouchers.MegaVouchersPlugin;
 import dev.imlukas.megavouchers.element.VoucherElement;
 import dev.imlukas.megavouchers.element.impl.generic.impl.conditions.type.ConditionalType;
-import dev.imlukas.megavouchers.element.priority.VoucherElementPriority;
 import lombok.Getter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;

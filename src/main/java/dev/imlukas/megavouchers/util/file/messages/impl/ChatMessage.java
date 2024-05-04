@@ -1,10 +1,10 @@
 package dev.imlukas.megavouchers.util.file.messages.impl;
 
 import dev.imlukas.megavouchers.util.file.messages.AbstractMessage;
-import dev.imlukas.megavouchers.util.text.ComponentPlaceholder;
+import dev.imlukas.megavouchers.util.text.TextUtils;
+import dev.imlukas.megavouchers.util.text.placeholder.Placeholder;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
@@ -15,19 +15,17 @@ public class ChatMessage extends AbstractMessage {
     private final List<Component> messages = new ArrayList<>();
 
     @SafeVarargs
-    public ChatMessage(ConfigurationSection section, ComponentPlaceholder<Audience>... placeholders) {
+    public ChatMessage(ConfigurationSection section, Placeholder<Audience>... placeholders) {
         super(section, placeholders);
-        MiniMessage miniMessage = MiniMessage.miniMessage();
-
         List<String> messages = section.getStringList("message");
 
         if (messages.isEmpty()) {
-            this.messages.add(miniMessage.deserialize(section.getString("message")));
+            this.messages.add(TextUtils.color(section.getString("message")));
             return;
         }
 
         for (String message : messages) {
-            this.messages.add(miniMessage.deserialize(message));
+            this.messages.add(TextUtils.color(message));
         }
     }
 

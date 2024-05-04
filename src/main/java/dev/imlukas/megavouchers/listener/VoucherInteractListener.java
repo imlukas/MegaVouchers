@@ -1,8 +1,10 @@
 package dev.imlukas.megavouchers.listener;
 
 import dev.imlukas.megavouchers.MegaVouchersPlugin;
+import dev.imlukas.megavouchers.util.player.PlayerUtil;
 import dev.imlukas.megavouchers.util.pdc.ItemPDCWrapper;
 import dev.imlukas.megavouchers.vouchers.registry.VoucherRegistry;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -19,6 +21,7 @@ public class VoucherInteractListener implements Listener {
 
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
         ItemStack item = event.getItem();
 
         if (item == null) {
@@ -37,14 +40,9 @@ public class VoucherInteractListener implements Listener {
             return;
         }
 
-        registry.getVoucher(voucherId).ifPresent(voucher -> {
-            voucher.claim(event.getPlayer());
-
-            if (item.getAmount() > 1) {
-                item.setAmount(item.getAmount() - 1);
-            } else {
-                event.getPlayer().getInventory().remove(item);
-            }
+        registry.getAsOptional(voucherId).ifPresent(voucher -> {
+            voucher.claim(player);
+            PlayerUtil.removeItem(player, item);
         });
     }
 }

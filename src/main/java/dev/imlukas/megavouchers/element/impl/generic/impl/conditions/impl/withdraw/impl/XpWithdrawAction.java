@@ -20,7 +20,7 @@ public class XpWithdrawAction extends WithdrawableConditionalVoucherElement {
     }
 
     @Override
-    protected void execute(Player player) {
+    public void execute(Player player) {
         player.giveExp((int) -amount);
     }
 }
