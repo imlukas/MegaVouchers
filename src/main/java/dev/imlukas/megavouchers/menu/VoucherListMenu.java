@@ -10,6 +10,8 @@ import dev.imlukas.megavouchers.util.menu.layer.pagination.PaginableLayer;
 import dev.imlukas.megavouchers.util.menu.template.Menu;
 import dev.imlukas.megavouchers.vouchers.Voucher;
 import dev.imlukas.megavouchers.vouchers.registry.VoucherRegistry;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -17,10 +19,15 @@ import java.util.Map;
 
 public class VoucherListMenu extends Menu {
 
+    private final ConfigurationSection configuration;
     private final VoucherRegistry registry;
+    private final String leftClickLore, rightClickLore;
 
     public VoucherListMenu(MegaVouchersPlugin plugin, Player viewer) {
         super(plugin, viewer);
+        this.configuration = applicator.getConfig();
+        this.leftClickLore = configuration.getString("lores.left-click", "<gray>Left-click to get <yellow>1x");
+        this.rightClickLore = configuration.getString("lores.right-click", "<gray>Right-click to get <yellow>5x");
         this.registry = plugin.getVoucherRegistry();
     }
 
@@ -35,8 +42,8 @@ public class VoucherListMenu extends Menu {
         for (Map.Entry<String, Voucher> voucherEntry : registry.entrySet()) {
             Voucher voucher = voucherEntry.getValue();
             ItemStack displayItem = voucher.getDisplayItem().clone();
-            ItemUtil.addLore(displayItem, "<gray>[Left Click] to get 1x");
-            ItemUtil.addLore(displayItem, "<gray>[Right Click] to get 5x");
+            ItemUtil.addLore(displayItem, leftClickLore);
+            ItemUtil.addLore(displayItem, rightClickLore);
             Button voucherButton = new Button(displayItem);
 
             voucherButton.onLeftClick(() -> voucher.forceGive(viewer, 1));

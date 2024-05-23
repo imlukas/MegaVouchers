@@ -42,7 +42,7 @@ public class VoucherInteractListener implements Listener {
 
         registry.getAsOptional(voucherId).ifPresent(voucher -> {
             voucher.claim(player);
-            PlayerUtil.removeItem(player, item);
+            voucher.remove(player, item);
         });
     }
 }

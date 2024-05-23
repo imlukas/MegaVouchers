@@ -2,9 +2,21 @@ package dev.imlukas.megavouchers.element.registry;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-public interface ProviderRegistry<T> {
+import java.util.HashMap;
+import java.util.Map;
 
-    void registerDefaults();
+public abstract class ProviderRegistry<T> {
 
-    T tryParse(ConfigurationSection section);
+    private final Map<String, T> providers = new HashMap<>();
+
+    public void register(String key, T provider) {
+        providers.put(key, provider);
+    }
+
+    public T get(String key) {
+        return providers.get(key);
+    }
+
+
+    protected abstract void registerDefaults();
 }

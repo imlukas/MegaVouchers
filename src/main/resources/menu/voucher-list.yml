@@ -8,6 +8,11 @@ layout:
   - "b . . . . . . . b"
   - "b b b p c n b b b"
 
+
+lore:
+  left-click: "<gray>[Left-Click] Click to get <yellow>1x"
+  right-click: "<gray>[Right-Click] Click to get <yellow>5x"
+
 items:
   b:
     type: BLACK_STAINED_GLASS_PANE

@@ -35,4 +35,6 @@ public interface Voucher {
     void claim(Player player);
 
 
+    void remove(Player player, ItemStack itemStack);
+
 }

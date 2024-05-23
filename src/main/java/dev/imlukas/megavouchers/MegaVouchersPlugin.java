@@ -4,6 +4,7 @@ import dev.imlukas.megavouchers.commands.VoucherGiveAndGetCommands;
 import dev.imlukas.megavouchers.commands.VoucherListCommand;
 import dev.imlukas.megavouchers.element.impl.generic.registry.ElementProviderRegistry;
 import dev.imlukas.megavouchers.listener.VoucherInteractListener;
+import dev.imlukas.megavouchers.storage.database.VirtualVoucherStorage;
 import dev.imlukas.megavouchers.util.commands.bukkit.BukkitCommandManager;
 import dev.imlukas.megavouchers.util.file.messages.Messages;
 import dev.imlukas.megavouchers.vouchers.parser.VoucherParser;
@@ -24,6 +25,8 @@ public final class MegaVouchersPlugin extends ManagedJavaPlugin {
 
     @Getter(AccessLevel.NONE)
     private VoucherParser voucherParser;
+
+    private VirtualVoucherStorage virtualVoucherStorage;
 
     @Override
     public void enable() {

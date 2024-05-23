@@ -7,7 +7,7 @@ import dev.imlukas.megavouchers.element.impl.generic.registry.ElementProviderReg
 import dev.imlukas.megavouchers.util.file.YMLBase;
 import dev.imlukas.megavouchers.util.io.IOUtils;
 import dev.imlukas.megavouchers.util.item.parser.ItemParser;
-import dev.imlukas.megavouchers.vouchers.ConfigurableVoucher;
+import dev.imlukas.megavouchers.vouchers.impl.ConfigurableVoucher;
 import dev.imlukas.megavouchers.vouchers.Voucher;
 import dev.imlukas.megavouchers.vouchers.data.VoucherData;
 import org.bukkit.Material;
@@ -53,20 +53,15 @@ public class VoucherParser {
     private Voucher parse(File voucherFile) {
         YMLBase ymlBase = new YMLBase(plugin, voucherFile, true);
         FileConfiguration config = ymlBase.getConfiguration();
-        ConfigurationSection section = config.getConfigurationSection("voucher");
-
-        if (section == null) {
-            getLog().warning("No voucher section found in " + voucherFile.getName());
-            return null;
-        }
 
         String identifier = voucherFile.getName().replace(".yml", "");
         getLog().info("Parsing voucher: " + identifier);
 
-        ConfigurationSection itemSection = section.getConfigurationSection("item");
+        String voucherType = config.getString("type", "physical");
+        ConfigurationSection itemSection = config.getConfigurationSection("item");
         ItemStack displayItem = ItemParser.fromOrDefault(itemSection, Material.PAPER);
 
-        ConfigurationSection elementsSection = section.getConfigurationSection("elements");
+        ConfigurationSection elementsSection = config.getConfigurationSection("elements");
 
         if (elementsSection == null) {
             getLog().warning("No elements found for voucher: " + identifier);
@@ -76,7 +71,7 @@ public class VoucherParser {
         VoucherElementContainer elements = parseElements(elementsSection);
         getLog().info("Parsed " + elements.getAllElements().size() + " elements for voucher: " + identifier);
 
-        VoucherData data = new VoucherData(identifier, displayItem, elements);
+        VoucherData data = new VoucherData(identifier, voucherType, displayItem, elements);
         return new ConfigurableVoucher(plugin, data);
     }
 

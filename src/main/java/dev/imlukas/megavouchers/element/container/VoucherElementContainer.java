@@ -88,7 +88,7 @@ public class VoucherElementContainer {
      * @param type   the type of the conditionals to check
      * @return true if all conditionals are met, false otherwise
      */
-    public boolean runConditionals(Player player, ConditionalType type) {
+    public boolean meetsConditions(Player player, ConditionalType type) {
         for (ConditionalVoucherElement conditional : conditionals) {
             if (conditional.getType() != type) {
                 continue;

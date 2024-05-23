@@ -19,10 +19,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class ElementProviderRegistry implements ProviderRegistry<VoucherElement> {
+public class ElementProviderRegistry extends ProviderRegistry<ElementProvider> {
 
     private final MegaVouchersPlugin plugin;
-    private final Map<String, ElementProvider> registeredProviders = new ConcurrentHashMap<>();
 
     public ElementProviderRegistry(MegaVouchersPlugin plugin) {
         this.plugin = plugin;
@@ -33,10 +32,6 @@ public class ElementProviderRegistry implements ProviderRegistry<VoucherElement>
         for (String id : ids) {
             register(id, provider);
         }
-    }
-
-    public void register(String id, ElementProvider provider) {
-        registeredProviders.put(id, provider);
     }
 
     @Override
@@ -56,10 +51,9 @@ public class ElementProviderRegistry implements ProviderRegistry<VoucherElement>
         register("withdraw-hp", HpWithdrawAction::new);
     }
 
-    @Override
     public VoucherElement tryParse(ConfigurationSection section) {
         String id = section.contains("type") ? section.getString("type") : section.getName();
-        ElementProvider provider = registeredProviders.get(id);
+        ElementProvider provider = get(id);
 
         if (provider == null) {
             return null;
